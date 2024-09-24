@@ -1,0 +1,24 @@
+name: Commit Message Check
+
+on: [push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check commit messages
+        run: |
+          # Get the latest commit message
+          commit_message=$(git log -1 --pretty=%B)
+
+          # Check if it matches the Jira ticket ID pattern (e.g., PROJECT-123)
+          if [[ $commit_message =~ [A-Z]+-[0-9]+ ]]; then
+            echo "Commit message is valid."
+          else
+            echo "Error: Commit message must include a Jira ticket ID (e.g., PROJECT-123)."
+            exit 1
+          fi
